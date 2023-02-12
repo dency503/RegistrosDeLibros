@@ -2,22 +2,23 @@
 #define LIBRO_H_INCLUDED
 #include "Publicacion.h"
 #include "Prestar.h"
-class Libro: public Publicacion, public Prestable
+class Libro : public Publicacion, public Prestable
 {
 private:
     bool estadoPrestamo;
+
 public:
-    Libro(int c, string t, int ap):Publicacion(c,t,ap)
+    Libro(int codigo, string titulo, int aniopublicacion) : Publicacion(codigo, titulo, aniopublicacion)
     {
         this->estadoPrestamo = false;
     }
     void prestar()
     {
-        this->estadoPrestamo=true;
+        this->estadoPrestamo = true;
     }
     void devolver()
     {
-        this->estadoPrestamo=false;
+        this->estadoPrestamo = false;
     }
     bool prestado()
     {
@@ -28,6 +29,5 @@ public:
         return 2;
     }
 };
-
 
 #endif // LIBRO_H_INCLUDED

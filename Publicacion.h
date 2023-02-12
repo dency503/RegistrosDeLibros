@@ -8,37 +8,39 @@ protected:
     int codigo;
     string titulo;
     int anioPublicacion;
+
 public:
-    Publicacion(int c, string t,int ap)
+    Publicacion(int c, string t, int ap)
     {
-        this -> codigo=c;
-        this -> titulo=t;
-        this -> anioPublicacion=ap;
+        this->codigo = c;
+        this->titulo = t;
+        this->anioPublicacion = ap;
     }
     void setCodigo(int c)
     {
-        this->codigo=c;
+        this->codigo = c;
     }
-    int getCodigo(){
-    return this->codigo;
+    int getCodigo()
+    {
+        return this->codigo;
     }
     void setTitulo(string t)
     {
-        this->titulo=t;
+        this->titulo = t;
     }
-    string getTitulo(){
-    return this->titulo;
-    }
-        void setAnioPublicacion(int ap)
+    string getTitulo()
     {
-        this->anioPublicacion=ap;
+        return this->titulo;
     }
-    int getAnioPublicacion(){
-    return this->anioPublicacion;
+    void setAnioPublicacion(int ap)
+    {
+        this->anioPublicacion = ap;
     }
-    virtual int getTipoPublicacion()=0;
-
+    int getAnioPublicacion()
+    {
+        return this->anioPublicacion;
+    }
+    virtual int getTipoPublicacion() = 0;
 };
-
 
 #endif // PUBLICACION_H_INCLUDED

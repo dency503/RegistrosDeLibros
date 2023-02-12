@@ -10,171 +10,158 @@ using namespace std;
 int menu()
 {
     int op;
-    cout << "MENU DE OPCIONES\n";
-    cout << "1. Agregar publicacion\n";
-    cout << "2. Mostrar lista de publicaciones\n";
-    cout << "3. Hacer prestamo de libro\n";
-    cout << "4. Devolver Libro\n";
-    cout << "5. Salir\n";
-    cout << "Digite una opcion: ";
+    cout << "Menu:" << endl;
+    cout << "1. Registrar publicacion" << endl;
+    cout << "2. Mostrar publicaciones" << endl;
+    cout << "3. Hacer prestamo" << endl;
+    cout << "4. Devolver libro" << endl;
+    cout << "5. Salir" << endl;
+    cout << "Seleccione una opcion: ";
+
     cin >> op;
     return op;
 }
 Publicacion *agregarPublicacion()
 {
-    int tipo;
-    int cod;
-    string t;
-    int ap;
-    int nr;
+    int tipo, codigo;
+    string titulo;
+    int anioPublicacion;
+
     Publicacion *pub;
-    cout << "Escriba 1 para revista o 2 para un libro\n";
-    cout << "Digite el tipo de publicacion: ";
+    cout << "Escriba 1 para revista o 2 para un libro: ";
     cin >> tipo;
-    cout << "Digite el codigo de la publicacion: ";
-    cin >> cod;
-    cout << "Digite el titulo de la publicacion: ";
-    cin >> t;
+    cout << "Codigo:";
+    cin >> codigo;
+    cout << "Titulo: ";
+    cin >> titulo;
     cout << "Digite el anio de la publicacion: ";
-    cin >> ap;
+    cin >> anioPublicacion;
     if (tipo == 1)
     {
+
         /// Revista
+        int numeroRevista;
         cout << "Digite el numero de la revista: ";
-        cin >> nr;
-        pub = new Revista(cod, t, ap, nr);
+        cin >> numeroRevista;
+        pub = new Revista(codigo, titulo, anioPublicacion, numeroRevista);
+    }
+    else if (tipo == 2)
+    {
+        /// Libro
+        pub = new Libro(codigo, titulo, anioPublicacion);
     }
     else
     {
-        /// Libro
-        pub = new Libro(cod, t, ap);
+        cout << "Opcion no valida." << endl;
     }
     return pub;
 }
-void mostrarPublicaciones(Publicacion *lt[], int c)
+void mostrarPublicaciones(Publicacion *publicaciones[], int contador)
 {
-    if (c == 0)
+    if (contador == 0)
     {
         cout << "La lista de publicaciones esta vacia\n";
     }
     else
     {
-        cout << "Tipo\tCodigo\tTitulo\tA\n";
-        for (int i = 0; i < c; i++)
-        {
-            if (lt[i]->getAnioPublicacion() == 1)
-                ;
-            else
 
-                cout << ((lt[i]->getTipoPublicacion() == 1) ? "Revista" : "Libro") << "\t";
-            cout << lt[i]->getCodigo() << "\t";
-            cout << lt[i]->getTitulo() << "\t";
-            cout << lt[i]->getAnioPublicacion() << "\n";
+        for (int i = 0; i < contador; i++)
+        {
+            cout << "ID: " << i << endl;
+            cout << "Codigo: " << publicaciones[i]->getCodigo() << endl;
+            cout << "Titulo: " << publicaciones[i]->getTitulo() << endl;
+            cout << "Anio: " << publicaciones[i]->getAnioPublicacion() << endl;
+            cout << "Tipo: " << ((publicaciones[i]->getTipoPublicacion() == 1) ? "Revista" : "Libro");
+
+            cout << "\n====================================\n"
+                 << endl;
         }
     }
 }
-/*Libro *buscarLibro(Publicacion *lst[], int c, int cod)
+
+Libro *buscarLibro(Publicacion *lstPublicacion[], int contador, int codigo)
 {
     bool encontrado = false;
     int cont = 0;
-    Libro *lb = NULL;
-    while (cont < c && !encontrado)
+    while (cont < contador && !encontrado)
     {
-        if (lst[cont]->getTipoPublicacion() == 2)
+        if (lstPublicacion[cont]->getCodigo() == codigo)
         {
-            if (lst[cont]->getCodigo() == cod)
+            encontrado = true;
+
+            /*dynamic_cast se utiliza principalmente en programacion orientada a objetos para hacer conversion segura de tipos en sistemas con herencia. Por ejemplo,
+             supongamos que tenemos una clase base "Publicacion" y una clase derivada "Libro". Si tenemos un puntero a "Publicacion" que realmente apunta a un objeto de tipo "Libro",
+              podemos hacer una conversion segura a "Libro" usando dynamic_cast.
+            De esta manera, podemos aprovechar las caracter�sticas y metodos especificos de la clase "Libro" sin correr el riesgo de acceder a un objeto de un tipo equivocado.*/
+
+            if (Libro *lb = dynamic_cast<Libro *>(lstPublicacion[cont]))
             {
-                lb = (Libro *)lst[cont];
-                encontrado = true;
+                return lb;
             }
-            else
-            {
-                cont++;
-            }
-
-
-    return lb;
-}}}*/
-
-Libro *buscarLibro(Publicacion*lst[],int cCli,int id)
-{
-    bool encontrado= false;
-    Libro *lb ;
-    int cont =0;
-    while (cont<cCli && !encontrado){
-            if(lst[cont]->getCodigo() ==  id){
-                encontrado = true;
-                lb = (Libro *)lst[cont];
-
-            }else{
-            cont++;}
-
-    }return lb;
-
+        }
+        else
+        {
+            cont++;
+        }
+    }
+    return nullptr;
 }
 
-
-void hacerPrestamo(Publicacion *lst[], int c)
+void hacerPrestamo(Publicacion *lstPublicacion[], int contador)
 {
-    int cod;
-    if (c == 0)
+    int codigo;
+    if (contador == 0)
     {
         cout << "La lista de publicaciones esta vacia\n";
     }
     else
     {
         cout << "Digite el codigo del libro a prestar: ";
-        cin >> cod;
-        Libro *lb = buscarLibro(lst, c, cod);
+        cin >> codigo;
+        Libro *lb = buscarLibro(lstPublicacion, contador, codigo);
 
         if (lb)
         {
-            cout << "Se encontro el libro\n";
-            if (lb->getTipoPublicacion() == 1 ){
-               cout<<"No se puede prestar una revista\n";
-            }else{
-
-            /// Se encontro el libro
-            if (lb->prestado() )
+            if (lb->prestado())
             {
-                cout << "No se puede hacer el prestamo,porque el libro esta prestado\n";
+                cout << "Lo sentimos, el libro con codigo " << codigo << " no esta disponible para prestamo." << endl;
             }
             else
             {
-                cout << "El libro se presto satisfactoriamente\n";
                 lb->prestar();
-
+                cout << "El libro con codigo " << codigo << " ha sido prestado exitosamente." << endl;
             }
-        }}
+        }
         else
         {
-            cout << "El libro no esta en la lista\n";
+            cout << "Lo sentimos, el libro con codigo " << codigo << " no se encuentra en la lista." << endl;
         }
     }
 }
-void hacerDevolucion(Publicacion *lst[], int c)
+void hacerDevolucion(Publicacion *lstPublicaciones[], int contador)
 {
-    int cod;
-    if (c == 0)
+    int codigo;
+    if (contador == 0)
     {
         cout << "La lista de publicaciones esta vacia\n";
     }
     else
     {
-        cout << "Digite el codigo del libro a devolver: ";
-        cin >> cod;
-        Libro *lb = buscarLibro(lst, c, cod);
-        if (lb != NULL)
+        cout << "Ingrese Codigo del libro a devolver: ";
+        cin >> codigo;
+        Libro *lb = buscarLibro(lstPublicaciones, contador, codigo);
+        if (lb != nullptr)
         {
             /// Se encontro el libro
             if (lb->prestado())
             {
-                cout << "El proceso de devolucion se hizo correctamente\n";
+
                 lb->devolver();
+                cout << "Libro devuelto exitosamente." << endl;
             }
             else
             {
-                cout << "El libro no se puede devolver, porque el libro no ha sido prestado\n";
+                cout << "Libro ya se encuentra disponible." << endl;
             }
         }
         else
@@ -183,6 +170,7 @@ void hacerDevolucion(Publicacion *lst[], int c)
         }
     }
 }
+
 int main()
 {
     int opc;
@@ -223,14 +211,14 @@ int main()
             hacerDevolucion(lista, cont);
             break;
         case 5:
-            ///Saliendo....
+            /// Saliendo....
             system("cls");
-            cout << "Saliendo del programa\n";
+            cout << "Adios!!\n";
             break;
         default:
-            //El usuario ha selecionado opcion incorreta o ingreso un tipo de valor donde no encaja
+            /// El usuario ha selecionado opcion incorreta o ingreso un tipo de valor donde no encaja con la variable
             system("cls");
-            cout << "Error, opcion no definida\n";
+            cout << "Opcion no valida." << endl;
             break;
         }
         system("pause");
